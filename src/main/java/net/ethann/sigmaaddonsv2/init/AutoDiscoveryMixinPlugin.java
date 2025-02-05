@@ -1,4 +1,4 @@
-package com.github.nolifejavadeveloper.sigmaaddonsv2.init;
+package net.ethann.sigmaaddonsv2.init;
 
 import org.spongepowered.asm.lib.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
