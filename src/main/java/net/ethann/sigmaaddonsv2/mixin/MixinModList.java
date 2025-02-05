@@ -2,7 +2,6 @@ package net.ethann.sigmaaddonsv2.mixin;
 
 import net.ethann.sigmaaddonsv2.SigmaAddons;
 import net.minecraft.client.Minecraft;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.network.handshake.FMLHandshakeMessage;
 import org.spongepowered.asm.mixin.Mixin;
