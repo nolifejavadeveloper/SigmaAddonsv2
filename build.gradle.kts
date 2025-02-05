@@ -17,6 +17,7 @@ val mixinGroup = "$baseGroup.mixin"
 val modid: String by project
 val transformerFile = file("src/main/resources/accesstransformer.cfg")
 
+
 // Toolchains:
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(8))
@@ -86,7 +87,6 @@ dependencies {
 
     // If you don't want to log in with your real minecraft account, remove this line
     runtimeOnly("me.djtheredstoner:DevAuth-forge-legacy:1.2.1")
-
 }
 
 // Tasks:
@@ -137,6 +137,7 @@ tasks.jar {
 tasks.shadowJar {
     destinationDirectory.set(layout.buildDirectory.dir("intermediates"))
     archiveClassifier.set("non-obfuscated-with-deps")
+
     configurations = listOf(shadowImpl)
     doLast {
         configurations.forEach {
