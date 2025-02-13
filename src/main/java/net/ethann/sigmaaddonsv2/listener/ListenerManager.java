@@ -7,7 +7,7 @@ import org.reflections.scanners.Scanners;
 import java.util.Set;
 
 public class ListenerManager {
-    public void init() throws InstantiationException, IllegalAccessException {
+    public static void registerListeners() throws InstantiationException, IllegalAccessException {
         Reflections reflections = new Reflections("net.ethann.sigmaaddonsv2.listener.impl");
         Set<Class<?>> classes = reflections.get(Scanners.SubTypes.of(Object.class).asClass());
 
