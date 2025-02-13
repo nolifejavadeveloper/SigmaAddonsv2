@@ -1,4 +1,4 @@
-package net.ethann.sigmaaddonsv2.listener;
+package net.ethann.sigmaaddonsv2.listener.impl;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -7,6 +7,9 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 public class RenderListener {
     private GuiScreen guiToRender;
+
+    public RenderListener() {}
+
     public void renderNextTick(GuiScreen gui) {
         guiToRender = gui;
     }
