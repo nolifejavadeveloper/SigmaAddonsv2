@@ -1,12 +1,23 @@
 package net.ethann.sigmaaddonsv2.feature;
 
+import net.minecraft.client.Minecraft;
 import org.reflections.Reflections;
 
 import java.util.HashMap;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class FeatureManager {
     private final HashMap<Class<? extends Feature>, Feature> features = new HashMap<>();
+
+    public FeatureManager() {
+        try {
+            load();
+        } catch (InstantiationException | IllegalAccessException e) {
+            Logger.getGlobal().log(Level.SEVERE, "failed to load features", e);
+        }
+    }
 
     public void load() throws InstantiationException, IllegalAccessException {
         Reflections reflection = new Reflections("net.ethann.sigmaaddonsv2.feature.impl");
