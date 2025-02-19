@@ -9,13 +9,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class ListenerManager {
-    public static void registerListeners() {
+    public void registerListeners() {
         Reflections reflections = new Reflections("net.ethann.sigmaaddonsv2.listener.impl");
         Set<Class<?>> classes = reflections.get(Scanners.SubTypes.of(Object.class).asClass());
 
         for (Class<?> clazz : classes) {
             try {
-                MinecraftForge.EVENT_BUS.register(clazz.newInstance());
+                Class<?> instance = (Class<?>) clazz.newInstance();
+                MinecraftForge.EVENT_BUS.register(instance);
             } catch (InstantiationException | IllegalAccessException e) {
                 Logger.getGlobal().log(Level.SEVERE, "failed to load listeners", e);
             }

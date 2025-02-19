@@ -1,12 +1,9 @@
 package net.ethann.sigmaaddonsv2.command;
 
 import net.ethann.sigmaaddonsv2.SigmaAddons;
-import net.ethann.sigmaaddonsv2.config.ConfigGui;
-import net.minecraft.client.Minecraft;
+import net.ethann.sigmaaddonsv2.ui.clickgui.ClickGUIScreen;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.server.management.PlayerManager;
 
 import java.util.Arrays;
 import java.util.List;
@@ -25,7 +22,7 @@ public class ConfigCommand extends CommandBase {
 
     @Override
     public void processCommand(ICommandSender sender, String[] args) {
-        SigmaAddons.getInstance().renderListener.renderNextTick(new ConfigGui());
+        SigmaAddons.getInstance().getRenderListener().renderNextTick(new ClickGUIScreen());
     }
 
     @Override

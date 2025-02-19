@@ -1,6 +1,5 @@
 package net.ethann.sigmaaddonsv2.feature;
 
-import net.minecraft.client.Minecraft;
 import org.reflections.Reflections;
 
 import java.util.HashMap;
@@ -23,7 +22,8 @@ public class FeatureManager {
         Reflections reflection = new Reflections("net.ethann.sigmaaddonsv2.feature.impl");
         Set<Class<? extends Feature>> classes = reflection.getSubTypesOf(Feature.class);
         for (Class<? extends Feature> clazz : classes) {
-            features.put(clazz, clazz.newInstance());
+            Feature feature = clazz.newInstance();
+            features.put(clazz, feature);
         }
     }
 
