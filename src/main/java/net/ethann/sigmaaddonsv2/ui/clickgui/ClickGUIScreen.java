@@ -6,6 +6,8 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,8 +36,8 @@ public class ClickGUIScreen extends GuiScreen {
     final int searchBarHeight = (int) ((fontRenderer.FONT_HEIGHT * searchBarFontScaleFactor) + searchBarTextToLinePadding + 1);
     final int searchBarX = backgroundX + backgroundWidth - searchBarRightPadding - searchBarLineLength;
     final int searchBarY = backgroundY + ((topBarHeight - searchBarHeight) / 2);
-    private int searchBarEntryWidth = 0;
-    private String searchBarDisplay = "";
+    private double searchBarEntryWidth = 0;
+    private int searchTextOffset = 0;
     private String searchBarEntry = "";
 
 
@@ -58,7 +60,6 @@ public class ClickGUIScreen extends GuiScreen {
 
     @Override
     protected void mouseClicked(final int mouseX, final int mouseY, final int mouseButton) throws IOException {
-        System.out.println(isClickOnSearchBar(mouseX, mouseY));
         isInSearchbar = isClickOnSearchBar(mouseX, mouseY);
     }
 
@@ -74,7 +75,11 @@ public class ClickGUIScreen extends GuiScreen {
         }
 
         if (isInSearchbar) {
-            updateSearch(typedChar);
+            if (Character.isLetter(typedChar)) {
+                updateSearch(typedChar);
+            }else if (keyCode == Keyboard.KEY_DELETE || keyCode == Keyboard.KEY_BACK) {
+                popSearch();
+            }
         }
     }
 
@@ -91,22 +96,34 @@ public class ClickGUIScreen extends GuiScreen {
 
     private void updateSearch(char c) {
         searchBarEntry += c;
-        searchBarEntryWidth += fontRenderer.getCharWidth(c);
-        searchBarDisplay += c;
-        while (searchBarEntryWidth > searchBarLineLength / searchBarFontScaleFactor) {
-            char removing = searchBarDisplay.charAt(0);
-            searchBarDisplay = searchBarDisplay.substring(1);
-            searchBarEntryWidth -= fontRenderer.getCharWidth(removing);
-            System.out.println(searchBarEntryWidth);
-        }
+        searchBarEntryWidth += fontRenderer.getCharWidth(c) * searchBarFontScaleFactor;
+
+        searchTextOffset = (int) Math.max(0, searchBarEntryWidth - (searchBarLineLength - searchBarTextOffset));
     }
+
+    private void popSearch() {
+        if (searchBarEntry.isEmpty()) return;
+        char lastChar = searchBarEntry.charAt(searchBarEntry.length() - 1);
+        double charWidth = fontRenderer.getCharWidth(lastChar) * searchBarFontScaleFactor;
+
+        searchBarEntry = searchBarEntry.substring(0, searchBarEntry.length() - 1);
+        searchBarEntryWidth -= charWidth;
+
+        searchTextOffset = (int) Math.max(0, searchBarEntryWidth - (searchBarLineLength - searchBarTextOffset));
+    }
+
     private void drawSearchBar() {
         GlStateManager.pushMatrix();
         GlStateManager.translate(searchBarX, searchBarY, 0);
         drawRect(0, (int) (fontRenderer.FONT_HEIGHT * searchBarFontScaleFactor) + searchBarTextToLinePadding, searchBarLineLength, (int) (fontRenderer.FONT_HEIGHT * searchBarFontScaleFactor) + searchBarTextToLinePadding + 1, 0xFFFFFFFF);
-        GlStateManager.translate(searchBarTextToLinePadding, 0, 0);
+
+        GL11.glEnable(GL11.GL_SCISSOR_TEST);
+        GL11.glScissor((searchBarX + searchBarTextOffset) * scaledresolution.getScaleFactor(), 0, mc.displayWidth - (searchBarX * scaledresolution.getScaleFactor() + searchBarTextOffset), mc.displayHeight);
+        //drawRect(-1000, -1000, mc.displayWidth, mc.displayHeight, 0x4CFFFFFF); // SISSOR AREA
+        GL11.glTranslated(-searchTextOffset + searchBarTextOffset, 0, 0);
         GlStateManager.scale(searchBarFontScaleFactor, searchBarFontScaleFactor, 1);
-        fontRenderer.drawString(searchBarEntry.isEmpty() ? "Search" : searchBarDisplay,0, 0, 0xFFFFFFFF);
+        fontRenderer.drawString((isInSearchbar ? searchBarEntry : searchBarEntry.isEmpty() ? "Search" : searchBarEntry),0, 0, 0xFFFFFFFF);
+        GL11.glDisable(GL11.GL_SCISSOR_TEST);
         GlStateManager.popMatrix();
     }
 
